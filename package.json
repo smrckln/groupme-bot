@@ -1,0 +1,26 @@
+{
+  "name": "groupme-bot",
+  "version": "1.0.0",
+  "description": "Simple GroupMe bot to keep track of most common words sent in messages",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smrckln/groupme-bot.git"
+  },
+  "author": "Samuel Ricklin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/smrckln/groupme-bot/issues"
+  },
+  "homepage": "https://github.com/smrckln/groupme-bot#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "groupme": "^0.5.7",
+    "sqlite3": "^3.1.8",
+    "voca": "^1.0.0"
+  }
+}
