@@ -18,13 +18,14 @@ router.route('/')
     })
 
     .post(function(req, res) {
+        var botName = process.env.BOT_NAME || "";
         var botRegex = /^\/top @[A-Z a-z0-9]+$/;
 
         if(botRegex.test(req.body.text)) {
             res.send('OK');
             bot.postMessage(req.body.name);
 
-        } else {
+        } else if (req.body.name != botName) {
             res.send('OK');
             var split = voca.words(req.body.text);
             var user_id = req.body.sender_id;
