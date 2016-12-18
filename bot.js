@@ -29,7 +29,7 @@ function _postMessage(name) {
 
           console.log('sending ' + botResponse + ' to ' + botID);
 
-          api.Bots.post(accessToken, botID, botResponse);
+          api.Bots.post(accessToken, botID, botResponse, {picture_url:""}, function(){});
 
           request.post(
               'https://api.groupme.com/v3/bots/post',
