@@ -17,8 +17,10 @@ function _postMessage(name) {
   botResponse = "";
   var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
   db.each(query, [user_id], function(err, row) {
+      console.log(row);
       botResponse += row.word + " " + row.count + "\n";
   }, function(err, numRows){
+      console.log(numRows);
       body = {
         "bot_id" : botID,
         "text" : botResponse
