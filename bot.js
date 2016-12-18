@@ -18,24 +18,26 @@ function _postMessage(name) {
   var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
   db.each(query, [user_id], function(err, row) {
       botResponse += row.word + " " + row.count + "\n";
+  }, function(err, numRows){
+      body = {
+        "bot_id" : botID,
+        "text" : botResponse
+      };
+
+      console.log('sending ' + botResponse + ' to ' + botID);
+
+      request.post(
+          'http://api.groupme.com/v3/bots/post',
+          { json: body },
+          function(error, response, body) {
+              if(error) {
+                  console.error(error);
+              }
+          }
+      );
   });
 
-  body = {
-    "bot_id" : botID,
-    "text" : botResponse
-  };
 
-  console.log('sending ' + botResponse + ' to ' + botID);
-
-  request.post(
-      'http://api.groupme.com/v3/bots/post',
-      { json: body },
-      function(error, response, body) {
-          if(error) {
-              console.error(error);
-          }
-      }
-  );
 }
 
 function _update(user_id, name, words) {
