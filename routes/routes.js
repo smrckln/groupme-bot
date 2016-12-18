@@ -1,6 +1,9 @@
 var express = require('express');
+var voca = require('voca');
 
 var router = express.Router();
+
+var bot = require('../bot.js');
 
 router.use(function(req, res, next) {
     // do logging
@@ -15,7 +18,22 @@ router.route('/')
     })
 
     .post(function(req, res) {
-        console.log(req.body);
+        var botRegex = /^\/top @[A-Z a-z0-9]+$/;
+
+        if(req.body.text && botRegex.test(req.body.text)) {
+            res.send('OK');
+            bot.postMessage();
+
+        } else {
+            res.send('OK');
+            var split = voca.words(req.body.text);
+            var user_id = req.body.sender_id;
+            var name = req.body.name;
+
+            bot.update(user_id, name, split);
+        }
+
+
     });
 
 module.exports = router;

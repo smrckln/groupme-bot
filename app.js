@@ -1,3 +1,4 @@
+
 var express = require('express');
 var app = express();
 
@@ -13,3 +14,4 @@ var routes = require('./routes/routes.js');
 app.use('/api/v1', routes);
 
 app.listen(port);
+console.log('App started listening on port ' + port);
