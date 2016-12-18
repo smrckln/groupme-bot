@@ -4,7 +4,7 @@ var api = require('groupme').Stateless;
 
 var request = require('request');
 
-var botID = '1f597410f6b05ea5a74c5d0928';
+var botID = process.env.BOT_ID || -1;
 var accessToken = process.env.ACCESS_TOKEN || -1;
 
 function _postMessage(name) {
@@ -18,16 +18,14 @@ function _postMessage(name) {
       botResponse = "";
       var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
       db.each(query, [user_id], function(err, row) {
-          console.log(row);
           botResponse += row.word + " " + row.count + "\n";
       }, function(err, numRows){
-          console.log(numRows);
           body = {
             "bot_id" : botID,
             "text" : botResponse
           };
 
-          console.log('sending ' + botResponse + ' to ' + botID);
+          console.log('sending to ' + botID);
 
           api.Bots.post(accessToken, botID, botResponse, {picture_url:""}, function(){});
       });

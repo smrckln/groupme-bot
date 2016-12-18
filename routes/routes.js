@@ -23,7 +23,8 @@ router.route('/')
 
         if(botRegex.test(req.body.text)) {
             res.send('OK');
-            bot.postMessage(req.body.name);
+            var about = req.body.text.substring(req.body.text.indexOf('@')+1);
+            bot.postMessage(about);
 
         } else if (req.body.name != botName) {
             res.send('OK');
