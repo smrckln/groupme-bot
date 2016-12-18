@@ -5,7 +5,7 @@ var request = require('request');
 
 var botID = '1f597410f6b05ea5a74c5d0928';
 
-function postMessage(name) {
+function _postMessage(name) {
   var botResponse, options, body;
 
   var user_id = -1;
@@ -38,7 +38,7 @@ function postMessage(name) {
   );
 }
 
-function update(user_id, name, words) {
+function _update(user_id, name, words) {
     db.get('select * from users where user_id = ?', user_id, function(err, row){
         if(!row){
             db.run('insert into users (user_id, name) values (?,?)', [user_id, name], function(err) {
@@ -62,3 +62,8 @@ function update(user_id, name, words) {
     }
     stmt.finalize();
 }
+
+module.exports = {
+    update: _update,
+    postMessage: _postMessage
+};
