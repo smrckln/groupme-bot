@@ -20,9 +20,9 @@ router.route('/')
     .post(function(req, res) {
         var botRegex = /^\/top @[A-Z a-z0-9]+$/;
 
-        if(req.body.text && botRegex.test(req.body.text)) {
+        if(botRegex.test(req.body.text)) {
             res.send('OK');
-            bot.postMessage();
+            bot.postMessage(req.body.name);
 
         } else {
             res.send('OK');
