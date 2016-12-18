@@ -1,9 +1,11 @@
 var sqlite = require('sqlite3').verbose();
 var db = new sqlite.Database('groupme.db');
+var api = require('groupme').Stateless;
 
 var request = require('request');
 
 var botID = '1f597410f6b05ea5a74c5d0928';
+var accessToken = process.env.ACCESS_TOKEN || -1;
 
 function _postMessage(name) {
   var botResponse, options, body;
@@ -27,8 +29,10 @@ function _postMessage(name) {
 
           console.log('sending ' + botResponse + ' to ' + botID);
 
+          api.Bots.post(accessToken, botID, botResponse);
+
           request.post(
-              'http://api.groupme.com/v3/bots/post',
+              'https://api.groupme.com/v3/bots/post',
               { json: body },
               function(error, response, body) {
                   if(error) {
