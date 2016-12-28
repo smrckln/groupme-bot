@@ -7,7 +7,7 @@ var bot = require('../bot.js');
 
 router.use(function(req, res, next) {
     // do logging
-    console.log(req.method + " " + req.path + " " + req.ip);
+    logger.info(req.method + " " + req.path + " " + req.ip);
     next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -28,7 +28,8 @@ router.route('/')
 
         } else if (req.body.name != botName) {
             res.send('OK');
-            var split = voca.words(req.body.text);
+            var splitRegex = /[\w']+|[.!?]+/;
+            var split = voca.split(req.body.text, splitRegex);
             var user_id = req.body.sender_id;
             var name = req.body.name;
 

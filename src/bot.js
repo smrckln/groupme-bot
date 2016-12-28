@@ -1,13 +1,16 @@
 var sqlite = require('sqlite3').verbose();
 var db = new sqlite.Database('groupme.db');
+
 var api = require('groupme').Stateless;
 
-var request = require('request');
+var voca = require('voca');
 
 var botID = process.env.BOT_ID || -1;
 var accessToken = process.env.ACCESS_TOKEN || -1;
 
 var logger = require('./log.js');
+
+const PAD_LENGTH = 25;
 
 function _postMessage(name) {
   var botResponse, options, body;
@@ -25,7 +28,7 @@ function _postMessage(name) {
               return;
           }
 
-          botResponse += row.word + " " + row.count + "\n";
+          botResponse += voca.pad(row.word, PAD_LENGTH) + voca.pad(row.count + " times", PAD_LENGTH) + "\n";
       }, function(err, numRows){
           if (err) {
               logger.error(err);
@@ -62,9 +65,9 @@ function _update(user_id, name, words) {
     });
     var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
     for(const word of words){
-        logger.info('INSERT ' + user_id + " " + word);
         stmt.run(user_id, word);
     }
+    logger.info('INSERT ' + user_id);
     stmt.finalize();
 }
 
