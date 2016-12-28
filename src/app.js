@@ -9,8 +9,8 @@ app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;
 
-var routes = require('routes/routes.js');
-var logger = require('log.js');
+var routes = require('./routes/routes.js');
+var logger = require('./log.js');
 
 app.use('/api/v1', routes);
 

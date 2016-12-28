@@ -7,7 +7,7 @@ var request = require('request');
 var botID = process.env.BOT_ID || -1;
 var accessToken = process.env.ACCESS_TOKEN || -1;
 
-var logger = require('log.js');
+var logger = require('./log.js');
 
 function _postMessage(name) {
   var botResponse, options, body;

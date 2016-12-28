@@ -1,6 +1,6 @@
 var bunyan = require('bunyan');
 
-const LOG_PATH = "./log/groupme.log";
+const LOG_PATH = "./logs/groupme.log";
 
 var log = bunyan.createLogger({
     name: 'groupme',
