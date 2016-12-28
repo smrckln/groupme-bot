@@ -7,6 +7,8 @@ var request = require('request');
 var botID = process.env.BOT_ID || -1;
 var accessToken = process.env.ACCESS_TOKEN || -1;
 
+var logger = require('log.js');
+
 function _postMessage(name) {
   var botResponse, options, body;
 
@@ -18,15 +20,23 @@ function _postMessage(name) {
       botResponse = "";
       var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
       db.each(query, [user_id], function(err, row) {
+          if (err) {
+              logger.error(err);
+              return;
+          }
+
           botResponse += row.word + " " + row.count + "\n";
       }, function(err, numRows){
+          if (err) {
+              logger.error(err);
+              return;
+          }
           body = {
             "bot_id" : botID,
             "text" : botResponse
           };
 
-          console.log('sending to ' + botID);
-
+          logger.info('Message sent');
           api.Bots.post(accessToken, botID, botResponse, {picture_url:""}, function(){});
       });
   });
@@ -37,14 +47,14 @@ function _update(user_id, name, words) {
         if(!row){
             db.run('insert into users (user_id, name) values (?,?)', [user_id, name], function(err) {
                 if(err){
-                    console.error(err);
+                    logger.error(err);
                 }
             });
         } else {
             if(row.name != name) {
                 db.run('update users set name = ? where user_id = ?', [name, user_id], function(err){
                     if(err) {
-                        console.error(err);
+                        logger.error(err);
                     }
                 });
             }
@@ -52,6 +62,7 @@ function _update(user_id, name, words) {
     });
     var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
     for(const word of words){
+        logger.info('INSERT ' + user_id + " " + word);
         stmt.run(user_id, word);
     }
     stmt.finalize();

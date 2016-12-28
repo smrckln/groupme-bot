@@ -18,6 +18,7 @@
   "homepage": "https://github.com/smrckln/groupme-bot#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "bunyan": "^1.8.5",
     "express": "^4.14.0",
     "groupme": "^0.5.7",
     "request": "^2.79.0",
