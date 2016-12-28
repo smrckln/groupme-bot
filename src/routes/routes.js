@@ -4,6 +4,7 @@ var voca = require('voca');
 var router = express.Router();
 
 var bot = require('../bot.js');
+var logger = require('../log.js');
 
 router.use(function(req, res, next) {
     // do logging
