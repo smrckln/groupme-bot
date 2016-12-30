@@ -101,7 +101,7 @@ function _generateMessage(user_id, length) {
 
 module.exports = {
     updateDBWithWords: _updateWords,
-    updateDBWithMessages: _updateMessages,
+    updateDBWithMessage: _updateMessages,
     generateTopWords: _generateTopWords,
     mimic: _generateMessage
 };
