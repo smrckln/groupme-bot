@@ -40,6 +40,7 @@ router.route('/')
             var name = req.body.name;
 
             helper.updateDBWithWords(user_id, name, split);
+            helper.updateDBWithMessage(user_id, name, req.body.text);
         } else if (mimicRegex.test(req.body.text)){
             res.send('OK');
             user_id = req.body.sender_id;
