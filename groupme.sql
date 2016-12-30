@@ -7,22 +7,20 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Table: messages
-DROP TABLE IF EXISTS messages;
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS `messages` (
     message TEXT    NOT NULL
                     DEFAULT (''),
-    user_id INTEGER REFERENCES users (user_id) 
+    user_id INTEGER REFERENCES users (user_id)
                     DEFAULT ( -1),
     id      INTEGER PRIMARY KEY AUTOINCREMENT
-                    DEFAULT ( -1) 
+                    DEFAULT ( -1)
 );
 
 
 -- Table: users
-DROP TABLE IF EXISTS users;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS `users` (
     id      INTEGER PRIMARY KEY AUTOINCREMENT
                     NOT NULL
                     DEFAULT ( -1),
@@ -35,12 +33,11 @@ CREATE TABLE users (
 
 
 -- Table: words
-DROP TABLE IF EXISTS words;
 
-CREATE TABLE words (
+CREATE TABLE IF NOT EXISTS `words` (
     id      INTEGER PRIMARY KEY AUTOINCREMENT
                     DEFAULT ( -1),
-    user_id STRING  REFERENCES users (user_id) 
+    user_id STRING  REFERENCES users (user_id)
                     NOT NULL
                     DEFAULT ( -1),
     word    STRING  NOT NULL

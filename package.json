@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "init": "sqlite3 groupme.db < groupme.sql",
-    "start": "npm run init && node src/app.js"
+    "create_db": "sqlite3 groupme.db < groupme.sql",
+    "start": "npm run create_db && node src/app.js"
   },
   "repository": {
     "type": "git",
