@@ -65,7 +65,7 @@ function _updateWords(user_id, name, words) {
     for(const word of words){
         stmt.run(user_id, word);
     }
-    logger.info('INSERT ' + user_id);
+    logger.info('INSERT ' + name + "("+user_id+")");
     stmt.finalize();
 }
 
@@ -78,6 +78,8 @@ function _updateMessages(user_id, name, message) {
             logger.error(err);
         }
     });
+
+    logger.info('INSERT message ' + name + '('+user_id+')');
 
 }
 
