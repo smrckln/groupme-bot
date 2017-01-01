@@ -42,48 +42,64 @@ function _generateTopWords(name) {
 }
 
 function addOrUpdateName(user_id, name) {
-    db.get('select * from users where user_id = ?', user_id, function(err, row){
-        if(!row){
-            db.run('insert into users (user_id, name) values (?,?)', [user_id, voca.trim(name)], function(err) {
-                if(err){
-                    logger.error(err);
-                }
-            });
-        } else {
-            if(row.name != voca.trim(name)) {
-                db.run('update users set name = ? where user_id = ?', [voca.trim(name), user_id], function(err){
-                    if(err) {
+    return new Promise(function(resolve, reject){
+        db.get('select * from users where user_id = ?', user_id, function(err, row){
+            if(!row){
+                db.run('insert into users (user_id, name) values (?,?)', [user_id, voca.trim(name)], function(err) {
+                    if(err){
                         logger.error(err);
+                        reject(err);
                     }
+                    resolve();
                 });
+            } else {
+                if(row.name != voca.trim(name)) {
+                    db.run('update users set name = ? where user_id = ?', [voca.trim(name), user_id], function(err){
+                        if(err) {
+                            logger.error(err);
+                            reject(err);
+                        }
+                        resolve();
+                    });
+                }
             }
-        }
+        });
     });
 }
 
 function _updateWords(user_id, name, words) {
 
-    addOrUpdateName(user_id, name);
+    addOrUpdateName(user_id, name).then(function(err){
+        if (err){
+            return;
+        }
+        var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
+        for(const word of words){
+            stmt.run(user_id, word);
+        }
+        logger.info('INSERT ' + name + "("+user_id+")");
+        stmt.finalize();
+    });
 
-    var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
-    for(const word of words){
-        stmt.run(user_id, word);
-    }
-    logger.info('INSERT ' + name + "("+user_id+")");
-    stmt.finalize();
+
 }
 
 function _updateMessages(user_id, name, message) {
 
-    addOrUpdateName(user_id, name);
-
-    db.run('insert into messages (user_id, message) values (?, ?)', [user_id, message], function(err){
-        if (err) {
-            logger.error(err);
+    addOrUpdateName(user_id, name).then(function(err){
+        if (err){
+            return;
         }
+        db.run('insert into messages (user_id, message) values (?, ?)', [user_id, message], function(err){
+            if (err) {
+                logger.error(err);
+            }
+        });
+
+        logger.info('INSERT message ' + name + '('+user_id+')');
     });
 
-    logger.info('INSERT message ' + name + '('+user_id+')');
+
 
 }
 
