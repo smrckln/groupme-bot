@@ -7,6 +7,8 @@ var markov = require('markovchain');
 
 var _ = require('underscore');
 
+var Promise = require('promise');
+
 var logger = require('./log.js');
 
 const PAD_LENGTH = 25;
@@ -15,26 +17,28 @@ function _generateTopWords(name) {
     var user_id = -1;
     var botResponse;
 
+    return new Promise(function(resolve, reject){
+        db.get('select user_id from users where name = ?', [voca.trim(name)], function(err,row){
+            user_id = row.user_id;
+            console.log(user_id);
 
+            botResponse = "";
+            var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
+            db.each(query, [user_id], function(err, row) {
+                if (err) {
+                    logger.error(err);
+                    reject(err);
+                }
 
-    db.get('select user_id from users where name = ?', [voca.trim(name)], function(err,row){
-        user_id = row.user_id;
-
-        botResponse = "";
-        var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
-        db.each(query, [user_id], function(err, row) {
-            if (err) {
-                logger.error(err);
-                return;
-            }
-
-            botResponse += voca.pad(row.word, PAD_LENGTH) + voca.pad(row.count + " times", PAD_LENGTH) + "\n";
-        }, function(err, numRows){
-            if (err) {
-                logger.error(err);
-                return;
-            }
-            return botResponse;
+                botResponse += voca.pad(row.word, PAD_LENGTH) + voca.pad(row.count + " times", PAD_LENGTH) + "\n";
+                console.log(botResponse);
+            }, function(err, numRows){
+                if (err) {
+                    logger.error(err);
+                    reject(err);
+                }
+                resolve(botResponse);
+            });
         });
     });
 }
@@ -86,20 +90,25 @@ function _updateMessages(user_id, name, message) {
 }
 
 function _generateMessage(user_id, length) {
-    db.all('select message from messages where user_id = ?', [user_id], function(err, rows){
-        var str = _.pluck(rows, 'message').join(' ');
-        var chain = new markov(str);
+    return new Promise(function(resolve, reject){
+        db.all('select message from messages where user_id = ?', [user_id], function(err, rows){
+            if (err){
+                reject(err);
+            }
+            var str = _.pluck(rows, 'message').join(' ');
+            var chain = new markov(str);
 
-        var useUpperCase = function(wordList){
-            var tmpList = Object.keys(wordList).filter(function(word){
-                return word[0] >= 'A' && word[0] <= 'Z';
-            });
-            return tmpList[~~(Math.random()*tmpList.length)];
-        };
+            var useUpperCase = function(wordList){
+                var tmpList = Object.keys(wordList).filter(function(word){
+                    return word[0] >= 'A' && word[0] <= 'Z';
+                });
+                return tmpList[~~(Math.random()*tmpList.length)];
+            };
 
-        return chain.start(useUpperCase).end(length).process();
+            resolve(chain.start(useUpperCase).end(length).process());
 
 
+        });
     });
 }
 
