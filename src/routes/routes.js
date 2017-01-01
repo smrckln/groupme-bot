@@ -22,12 +22,13 @@ router.route('/')
 
     .post(function(req, res) {
         var botName = process.env.BOT_NAME || "";
-        var botRegex = /^!top @[A-Z a-z0-9]+$/;
+        var topNameRegex = /^!top @[A-Z a-z0-9]+$/;
+        var topSelfRegex = /^!top\s*/;
         var mimicRegex = /^!mimic @[A-z a-z0-9]+$/;
         var user_id = -1;
 
-        if(botRegex.test(req.body.text)) {
-            logger.info("TOP SENT");
+        if(topNameRegex.test(req.body.text)) {
+            logger.info("TOP NAME SENT");
             res.send('OK');
             var about = req.body.text.substring(req.body.text.indexOf('@')+1);
             helper.generateTopWords(about).then(function(message){
@@ -35,6 +36,11 @@ router.route('/')
             });
 
 
+        } else if (topSelfRegex.test(req.body.text)){
+            res.send('OK');
+            helper.generateTopWords(req.body.name).then(function(message){
+                bot.postMessage(message);
+            });
         } else if (mimicRegex.test(req.body.text)){
             logger.info("MIMIC SENT");
             res.send('OK');
