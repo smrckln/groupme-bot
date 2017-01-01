@@ -50,8 +50,13 @@ router.route('/')
             user_id = req.body.sender_id;
             var name = req.body.name;
 
-            helper.updateDBWithWords(user_id, name, split);
-            helper.updateDBWithMessage(user_id, name, req.body.text);
+            helper.updateDBWithWords(user_id, name, split).then(function(err){
+                if (err){
+                    return;
+                }
+                helper.updateDBWithMessage(user_id, name, req.body.text);
+            });
+
         }
 
 

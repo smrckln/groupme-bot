@@ -69,16 +69,19 @@ function addOrUpdateName(user_id, name) {
 
 function _updateWords(user_id, name, words) {
 
-    addOrUpdateName(user_id, name).then(function(err){
-        if (err){
-            return;
-        }
-        var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
-        for(const word of words){
-            stmt.run(user_id, word);
-        }
-        logger.info('INSERT ' + name + "("+user_id+")");
-        stmt.finalize();
+    return new Promise(function(resolve, reject){
+        addOrUpdateName(user_id, name).then(function(err){
+            if (err){
+                reject(err);
+            }
+            var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
+            for(const word of words){
+                stmt.run(user_id, word);
+            }
+            logger.info('INSERT ' + name + "("+user_id+")");
+            stmt.finalize();
+            resolve(null);
+        });
     });
 
 
@@ -86,17 +89,20 @@ function _updateWords(user_id, name, words) {
 
 function _updateMessages(user_id, name, message) {
 
-    addOrUpdateName(user_id, name).then(function(err){
-        if (err){
-            return;
-        }
-        db.run('insert into messages (user_id, message) values (?, ?)', [user_id, message], function(err){
-            if (err) {
-                logger.error(err);
+    return new Promise(function(resolve, reject){
+        addOrUpdateName(user_id, name).then(function(err){
+            if (err){
+                reject(err);
             }
-        });
+            db.run('insert into messages (user_id, message) values (?, ?)', [user_id, message], function(err){
+                if (err) {
+                    logger.error(err);
+                }
+            });
 
-        logger.info('INSERT message ' + name + '('+user_id+')');
+            logger.info('INSERT message ' + name + '('+user_id+')');
+            resolve(null);
+        });
     });
 
 
