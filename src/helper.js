@@ -62,6 +62,7 @@ function addOrUpdateName(user_id, name) {
                         resolve(null);
                     });
                 }
+                resolve(null);
             }
         });
     });
