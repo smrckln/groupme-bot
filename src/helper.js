@@ -15,7 +15,9 @@ function _generateTopWords(name) {
     var user_id = -1;
     var botResponse;
 
-    db.get('select user_id from users where name = ?', [name], function(err,row){
+
+
+    db.get('select user_id from users where name = ?', [voca.trim(name)], function(err,row){
         user_id = row.user_id;
 
         botResponse = "";
@@ -40,14 +42,14 @@ function _generateTopWords(name) {
 function addOrUpdateName(user_id, name) {
     db.get('select * from users where user_id = ?', user_id, function(err, row){
         if(!row){
-            db.run('insert into users (user_id, name) values (?,?)', [user_id, name], function(err) {
+            db.run('insert into users (user_id, name) values (?,?)', [user_id, voca.trim(name)], function(err) {
                 if(err){
                     logger.error(err);
                 }
             });
         } else {
-            if(row.name != name) {
-                db.run('update users set name = ? where user_id = ?', [name, user_id], function(err){
+            if(row.name != voca.trim(name)) {
+                db.run('update users set name = ? where user_id = ?', [voca.trim(name), user_id], function(err){
                     if(err) {
                         logger.error(err);
                     }

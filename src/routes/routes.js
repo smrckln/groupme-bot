@@ -27,17 +27,20 @@ router.route('/')
         var user_id = -1;
 
         if(botRegex.test(req.body.text)) {
+            logger.info("TOP SENT");
             res.send('OK');
             var about = req.body.text.substring(req.body.text.indexOf('@')+1);
             var message = helper.generateTopWords(about) || "";
+            console.log("TOP" + message);
             bot.postMessage(message);
 
         } else if (mimicRegex.test(req.body.text)){
+            logger.info("MIMIC SENT");
             res.send('OK');
             user_id = req.body.sender_id;
             var numRegEx = /d+/;
             var length = numRegEx.exec(req.body.text)[0] || 5;
-            var response = helper.mimic(user_id, length);
+            var response = helper.mimic(user_id, length) || "";
             bot.postMessage(response);
         } else if (req.body.name != botName) {
             res.send('OK');
