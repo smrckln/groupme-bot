@@ -72,6 +72,7 @@ function _updateWords(user_id, name, words) {
     return new Promise(function(resolve, reject){
         addOrUpdateName(user_id, name).then(function(err){
             if (err){
+                logger.error("ERROR _updateWords");
                 reject(err);
             }
             var stmt = db.prepare('INSERT INTO words (user_id, word) VALUES (?, ?)');
@@ -92,6 +93,7 @@ function _updateMessages(user_id, name, message) {
     return new Promise(function(resolve, reject){
         addOrUpdateName(user_id, name).then(function(err){
             if (err){
+                logger.error("ERROR _updateMessages");
                 reject(err);
             }
             db.run('insert into messages (user_id, message) values (?, ?)', [user_id, message], function(err){
