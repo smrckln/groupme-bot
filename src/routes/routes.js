@@ -17,13 +17,13 @@ router.use(function(req, res, next) {
 router.route('/')
 
     .get(function(req, res) {
-        res.send('Callback Test');
+        res.send('Callback Test\n');
     })
 
     .post(function(req, res) {
         var botName = process.env.BOT_NAME || "";
-        var botRegex = /^\/top @[A-Z a-z0-9]+$/;
-        var mimicRegex = /^\/mimic @[A-z a-z0-9]+$/;
+        var botRegex = /^!top @[A-Z a-z0-9]+$/;
+        var mimicRegex = /^!mimic @[A-z a-z0-9]+$/;
         var user_id = -1;
 
         if(botRegex.test(req.body.text)) {
@@ -44,7 +44,9 @@ router.route('/')
         } else if (mimicRegex.test(req.body.text)){
             res.send('OK');
             user_id = req.body.sender_id;
-            var response = helper.mimic(user_id);
+            var numRegEx = /d+/;
+            var length = numRegEx.exec(req.body.text)[0] || 5;
+            var response = helper.mimic(user_id, length);
             bot.postMessage(response);
         }
 
