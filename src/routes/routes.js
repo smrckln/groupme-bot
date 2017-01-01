@@ -32,6 +32,13 @@ router.route('/')
             var message = helper.generateTopWords(about) || "";
             bot.postMessage(message);
 
+        } else if (mimicRegex.test(req.body.text)){
+            res.send('OK');
+            user_id = req.body.sender_id;
+            var numRegEx = /d+/;
+            var length = numRegEx.exec(req.body.text)[0] || 5;
+            var response = helper.mimic(user_id, length);
+            bot.postMessage(response);
         } else if (req.body.name != botName) {
             res.send('OK');
             var splitRegex = /[\w']+|[.!?]+/;
@@ -41,13 +48,6 @@ router.route('/')
 
             helper.updateDBWithWords(user_id, name, split);
             helper.updateDBWithMessage(user_id, name, req.body.text);
-        } else if (mimicRegex.test(req.body.text)){
-            res.send('OK');
-            user_id = req.body.sender_id;
-            var numRegEx = /d+/;
-            var length = numRegEx.exec(req.body.text)[0] || 5;
-            var response = helper.mimic(user_id, length);
-            bot.postMessage(response);
         }
 
 
