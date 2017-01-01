@@ -20,9 +20,8 @@ function _generateTopWords(name) {
     return new Promise(function(resolve, reject){
         db.get('select user_id from users where name = ?', [voca.trim(name)], function(err,row){
             user_id = row.user_id;
-            console.log(user_id);
 
-            botResponse = "";
+            botResponse = "\n";
             var query = 'SELECT word, COUNT(*) count FROM words where user_id = ? Group By word Order By COUNT(*) DESC LIMIT 5';
             db.each(query, [user_id], function(err, row) {
                 if (err) {
@@ -31,7 +30,6 @@ function _generateTopWords(name) {
                 }
 
                 botResponse += voca.pad(row.word, PAD_LENGTH) + voca.pad(row.count + " times", PAD_LENGTH) + "\n";
-                console.log(botResponse);
             }, function(err, numRows){
                 if (err) {
                     logger.error(err);
