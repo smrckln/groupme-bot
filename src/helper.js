@@ -50,7 +50,7 @@ function addOrUpdateName(user_id, name) {
                         logger.error(err);
                         reject(err);
                     }
-                    resolve();
+                    resolve(null);
                 });
             } else {
                 if(row.name != voca.trim(name)) {
@@ -59,7 +59,7 @@ function addOrUpdateName(user_id, name) {
                             logger.error(err);
                             reject(err);
                         }
-                        resolve();
+                        resolve(null);
                     });
                 }
             }
