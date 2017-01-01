@@ -39,8 +39,7 @@ router.route('/')
             logger.info("MIMIC SENT");
             res.send('OK');
             user_id = req.body.sender_id;
-            var numRegEx = /d+/;
-            var length = numRegEx.exec(req.body.text)[0] || 5;
+            var length = 15;
             helper.mimic(user_id, length).then(function(response){
                 bot.postMessage(response);
             });

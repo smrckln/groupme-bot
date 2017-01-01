@@ -93,6 +93,9 @@ function _generateMessage(user_id, length) {
             if (err){
                 reject(err);
             }
+            if (rows.length < 1){
+                reject();
+            }
             var str = _.pluck(rows, 'message').join(' ');
             var chain = new markov(str);
 
