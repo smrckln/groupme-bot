@@ -121,8 +121,13 @@ function _generateMessage(user_id, length) {
             if (rows.length < 1){
                 reject();
             }
-            var str = _.pluck(rows, 'message').join(' ');
+            var arr = _.pluck(rows, 'message');
+            var str = arr[0];
             var chain = new markov(str);
+            arr = arr.slice(1);
+            arr.forEach(function(string){
+                chain.parse(string);
+            });
 
             var useUpperCase = function(wordList){
                 var tmpList = Object.keys(wordList).filter(function(word){
